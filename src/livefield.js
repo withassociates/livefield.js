@@ -9,7 +9,7 @@
  *
  * Given an input like this:
  *
- *     <input type="text" data-source="/options.json" id="my-input" />
+ *     <input type="text" data-source="my_store.json" id="my-input" />
  *
  * We can activate with jQuery:
  *
@@ -17,7 +17,7 @@
  *
  * Or directly:
  *
- *     new Livefield({ input: '#my-input' });
+ *     new Livefield.Controller({ input: '#my-input' });
  *
  * ### Simple Store
  *
@@ -25,15 +25,22 @@
  *
  * You can specify this url on the input:
  *
- *     <input data-store="/my_store.json" />
+ *     <input data-store="my_store.json" />
  *
  * Or pass it in explicitly:
  *
- *     new Livefield({ store: '/my-store.json' })
+ *     new Livefield.Controller({ store: 'my_store.json' })
+ *
+ * ### Result templates
+ *
+ * Specify the selector for the result template on the input element:
+ *
+ *     <input type="text" data-template="#result-template" />
  *
  * ## Dependencies
  *
  * * jQuery ~> 1.5
+ * * Handlebars ~> 1.0
  *
  * ## Contributors
  *
@@ -80,6 +87,7 @@ Livefield.Controller = function(options) {
       KEY_UP    = 38,
       KEY_DOWN  = 40,
       KEY_ENTER = 13;
+      DEFAULT_TEMPLATE = '<li class="livefield-result" data-value="{{value}}">{{name}}</li>';
 
   // views
   var $input,
@@ -110,7 +118,7 @@ Livefield.Controller = function(options) {
   }
 
   function setupTemplate() {
-    var $template = $($input.attr('data-template'));
+    var $template = $($input.attr('data-template') || DEFAULT_TEMPLATE);
     template = Handlebars.compile($template.html());
   }
 
