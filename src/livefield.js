@@ -64,21 +64,120 @@ Livefield.Controller = function(options) {
   var self = this;
 
   // private vars
-  var $input;
+  var $input,
+      $results;
 
   // private functions
   var setup,
-      setupInput;
+      setupInput,
+      setupBindings,
+
+      find,
+      update,
+
+      value,
+      appendResults,
+      removeResults,
+
+      onKeyDown,
+      onFindComplete;
 
   // -- SETUP --
 
   setup = function() {
     $input = $(options.input);
+    self.store = new Livefield.Store({
+      url: options.store || $input.attr('data-store')
+    });
     setupInput();
+    setupBindings();
   }
 
   setupInput = function() {
     $input.addClass('livefield-input');
+  }
+
+  setupBindings = function() {
+    $input.bind('keydown', onKeyDown);
+  }
+
+  // -- ACTIONS --
+
+  find = function() {
+    self.store.find(value(), onFindComplete);
+  }
+
+  update = function(results) {
+    updateResults(results);
+  }
+
+  updateResults = function(results) {
+    if (results.length === 0) {
+      removeResults();
+    } else {
+      appendResults();
+      for (var i in results) { var result = results[i];
+        $results.append(
+          $('<li>' + result.name + '</li>')
+        );
+      }
+    }
+  }
+
+  // -- HELPERS --
+
+  value = function() {
+    return $input.val();
+  }
+
+  appendResults = function() {
+    if (!$results) {
+      $results = $('<ul class="livefield-results" />');
+      $results.insertAfter($input);
+    }
+  }
+
+  removeResults = function() {
+    if ($results) {
+      $results.remove();
+      delete $results;
+    }
+  }
+
+  // -- EVENT HANDLERS --
+
+  onKeyDown = function(event) {
+    find();
+  }
+
+  onFindComplete = function(results) {
+    update(results);
+  }
+
+  // -- RUN --
+
+  setup();
+}
+
+// @class Livefield.Store
+Livefield.Store = function(options) {
+  var self = this;
+
+  var setup;
+
+  self.find = function(query, callback) {
+    if (self.data) {
+      callback(self.data);
+    } else {
+      $.get(self.url, function(data) {
+        self.data = data;
+        callback(self.data);
+      });
+    }
+  }
+
+  setup = function() {
+    self.url = options.url;
   }
 
   setup();

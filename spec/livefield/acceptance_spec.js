@@ -11,7 +11,7 @@ describe('Livefield', function() {
         $('<input type="text" data-store="spec/fixtures/my_store.json" id="my-input" />')
       );
 
-      controller = new Livefield.Controller({ input: '#my-input' });
+      $('#my-input').livefield();
     });
 
     it('adds a class onto the input', function() {
@@ -20,9 +20,18 @@ describe('Livefield', function() {
 
     describe('when I type "a"', function() {
       beforeEach(function() {
-        $('#my-input').val('a').trigger('keydown');
+        runs(function() {
+          $('#my-input').val('a').trigger('keydown');
+        });
+      });
+
+      it('displays a list of options', function() {
+        waitsFor(function() {
+          return $('.livefield-options').length > 0;
+        }, 'list of options to appear', 250);
       });
     });
+
   });
 
 });

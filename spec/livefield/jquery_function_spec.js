@@ -1,6 +1,10 @@
 describe('$.fn.livefield', function() {
+  afterEach(function() {
+    $('#spec').html('');
+  });
+
   beforeEach(function() {
-    $('<input type="text" id="my-input" />').appendTo(document.body);
+    $('<input type="text" id="my-input" />').appendTo('#spec');
     $('#my-input').livefield();
   });
 
