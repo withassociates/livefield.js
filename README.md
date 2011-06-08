@@ -16,7 +16,19 @@ We can activate with jQuery:
 
 Or directly:
 
-    new Livefield({ input: '#my-input', store: '/options.json' });
+    new Livefield({ input: '#my-input' });
+
+## Simple Store
+
+By default, Livefield expects to retrieve results from a url.
+
+You can specify this url on the input:
+
+    <input data-store="/my_store.json" />
+
+Or pass it in explicitly:
+
+    new Livefield({ store: '/my-store.json' })
 
 ## Dependencies
 

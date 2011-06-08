@@ -17,7 +17,19 @@
  *
  * Or directly:
  *
- *     new Livefield({ input: '#my-input', store: '/options.json' });
+ *     new Livefield({ input: '#my-input' });
+ *
+ * ### Simple Store
+ *
+ * By default, Livefield expects to retrieve results from a url.
+ *
+ * You can specify this url on the input:
+ *
+ *     <input data-store="/my_store.json" />
+ *
+ * Or pass it in explicitly:
+ *
+ *     new Livefield({ store: '/my-store.json' })
  *
  * ## Dependencies
  *
@@ -63,96 +75,113 @@ var Livefield = {};
 Livefield.Controller = function(options) {
   var self = this;
 
+  // constants
+  var KEY_ESC   = 27,
+      KEY_UP    = 38,
+      KEY_DOWN  = 40,
+      KEY_ENTER = 13;
+
   // private vars
   var $input,
-      $results;
-
-  // private functions
-  var setup,
-      setupInput,
-      setupBindings,
-
-      find,
-      update,
-
-      value,
-      appendResults,
-      removeResults,
-
-      onKeyDown,
-      onFindComplete;
+      $results,
+      template;
 
   // -- SETUP --
 
-  setup = function() {
+  function setup() {
     $input = $(options.input);
     self.store = new Livefield.Store({
       url: options.store || $input.attr('data-store')
     });
     setupInput();
+    setupStore();
     setupBindings();
+    self.state = 'ready';
   }
 
-  setupInput = function() {
+  function setupInput() {
     $input.addClass('livefield-input');
   }
 
-  setupBindings = function() {
+  function setupStore() {
+    self.store = new Livefield.Store({
+      url: options.store || $input.attr('data-store')
+    });
+  }
+
+  function setupBindings() {
     $input.bind('keydown', onKeyDown);
   }
 
   // -- ACTIONS --
 
-  find = function() {
+  function update() {
+    self.state = 'updating';
+
+    if (hasValue()) {
+      find();
+    } else {
+      updateResults([]);
+    }
+  }
+
+  function find() {
     self.store.find(value(), onFindComplete);
   }
 
-  update = function(results) {
-    updateResults(results);
-  }
-
-  updateResults = function(results) {
+  function updateResults(results) {
     if (results.length === 0) {
       removeResults();
     } else {
       appendResults();
-      console.log(results);
+      $results.html('');
       for (var i in results) { var result = results[i];
         $results.append(
-          $('<li>' + result.name + '</li>')
+          $('<li class="livefield-result">' + result.name + '</li>')
         );
       }
     }
+    self.state = 'ready';
   }
 
   // -- HELPERS --
 
-  value = function() {
+  function value() {
     return $input.val();
   }
 
-  appendResults = function() {
+  function hasValue() {
+    return value() != '';
+  }
+
+  function appendResults() {
     if (!$results) {
       $results = $('<ul class="livefield-results" />');
       $results.insertAfter($input);
     }
   }
 
-  removeResults = function() {
+  function removeResults() {
     if ($results) {
       $results.remove();
-      delete $results;
+      $results = null;
     }
   }
 
   // -- EVENT HANDLERS --
 
-  onKeyDown = function(event) {
-    find();
+  function onKeyDown(event) {
+    self.state = 'updating';
+
+    if (event.which === KEY_ESC) {
+      $input.val('');
+    }
+
+    setTimeout(update, 0); // deferred
   }
 
-  onFindComplete = function(results) {
-    update(results);
+  function onFindComplete(results) {
+    updateResults(results);
   }
 
   // -- RUN --
@@ -163,8 +192,6 @@ Livefield.Controller = function(options) {
 // @class Livefield.Store
 Livefield.Store = function(options) {
   var self = this;
-
-  var setup;
 
   self.find = function(query, callback) {
     if (self.data) {
@@ -181,7 +208,7 @@ Livefield.Store = function(options) {
     }
   }
 
-  setup = function() {
+  function setup() {
     self.url = options.url;
   }
 

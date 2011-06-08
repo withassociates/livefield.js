@@ -11,10 +11,12 @@
     <script src="src/livefield.js"></script>
   </head>
   <body>
-    <input    id="my-input"
-            type="text"
-      data-store="spec/fixtures/my_store.json"
-       autofocus
+    <input
+     id="my-input"
+     type="text"
+     data-store="spec/fixtures/my_store.json"
+     data-option-template="<li class='livefield-option' data-value='{{path}}'><span class='name'>{{name}}</span> <span class='path'>{{path}}</span></li>"
+     autofocus
     />
     <script>
       $('#my-input').livefield();

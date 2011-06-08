@@ -22,28 +22,28 @@ ul, ol, li {
   -webkit-box-sizing: border-box;
 }
 
-.livefield-options {
+.livefield-results {
   padding: 4px 0;
   border: 1px solid #d4d4d4;
   border-top: 0;
   line-height: 1;
 }
 
-.livefield-option {
+.livefield-result {
   padding: 8px 10px;
   font-weight: bold;
   cursor: pointer; cursor: hand;
 }
 
-.livefield-active-option {
+.livefield-active-result {
   background-color: #dee5ea;
 }
 
-.livefield-option .name {
+.livefield-result .name {
   font-weight: bold;
 }
 
-.livefield-option .path {
+.livefield-result .path {
   position: absolute;
   right: 10px;
 }
