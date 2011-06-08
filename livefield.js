@@ -21,11 +21,11 @@
  *
  * ## Dependencies
  *
- * - jQuery >= 1.5
+ * * jQuery >= 1.5
  *
  * ## Contributors
  *
- * - jamie@withassociates.com
+ * * jamie@withassociates.com
  *
  * ## License
  *
