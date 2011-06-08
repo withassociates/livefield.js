@@ -1,14 +1,26 @@
 describe('Livefield', function() {
 
+  var UP    = 38,
+      DOWN  = 40,
+      ESC   = 27,
+      ENTER = 13;
+
+  beforeEach(function() {
+    this.addMatchers(LivefieldMatchers);
+  });
+
   describe('given a simple input and simple datasource', function() {
 
     beforeEach(function() {
-      $('#spec').append(
+      this.$input =
         $('<input />').
-        attr('type', 'text').
-        attr('data-store', 'spec/fixtures/my_store.json').
-        attr('id', 'my-input')
-      );
+        attr('type'         , 'text').
+        attr('id'           , 'my-input').
+        attr('data-store'   , 'spec/fixtures/my_store.json').
+        attr('data-template', '#livefield-result-template');
+
+      $('#spec').append(this.$input);
+
       this.controller = new Livefield.Controller({ input: '#my-input' });
     });
 
@@ -18,62 +30,126 @@ describe('Livefield', function() {
 
     describe('on creation', function() {
       it('adds a class onto the input', function() {
-        expect($('#my-input').hasClass('livefield-input')).toBeTruthy();
+        expect(this.$input).toHaveClass('livefield-input');
       });
     });
 
-    describe('when I type "a"', function() {
+    describe('when I type a character', function() {
       it('displays a list of results', function() {
+        typesCharacter();
         runs(function() {
-          $('#my-input').val('a').trigger('keydown');
-        });
-
-        waitsForReadyState();
-
-        runs(function() {
-          expect($('.livefield-result').length).toEqual(3);
+          expect('.livefield-result').toMatch(3);
         });
       });
     });
+
+    describe('a result', function() {
+      beforeEach(function() {
+        typesCharacter();
+        runs(function() {
+          this.$result = $('.livefield-result:first-child');
+        });
+      });
+
+      it('has a name', function() {
+        runs(function() {
+          expect(this.$result.find('.name')).toMatch();
+        });
+      });
+
+      it('has a path', function() {
+        runs(function() {
+          expect(this.$result.find('.path')).toMatch();
+        });
+      });
+    });
+
 
     describe('when I press ESC', function() {
       it('clears the input', function() {
+        typesCharacter();
+        pressesKey(27);
         runs(function() {
-          $('#my-input').val('a').trigger('keydown');
-        });
-
-        waitsForReadyState();
-
-        runs(function() {
-          var e = $.Event('keydown');
-          e.which = 27;
-          $('#my-input').trigger(e);
-        });
-
-        waitsForReadyState();
-
-        runs(function() {
-          expect($('#my-input').val()).toEqual('');
+          expect(this.$input.val()).toEqual('');
         });
       });
     });
 
     describe('when I clear the input', function() {
-      it('displays removes the list of results', function() {
+      it('removes the list of results', function() {
+        typesCharacter();
+        clearsInput();
         runs(function() {
-          $('#my-input').val('a').trigger('keydown');
+          expect('.livefield-results').toMatch(0);
         });
+      });
+    });
 
-        waitsForReadyState();
+    describe('when I press down', function() {
+      beforeEach(function() {
+        typesCharacter();
+        pressesKey(40);
+      });
 
+      it('highlights the first result', function() {
         runs(function() {
-          $('#my-input').val('').trigger('keydown');
+          expect('.livefield-result:first-child').toBeHighlighted();
         });
+      });
 
-        waitsForReadyState();
+      describe('when I press down again', function() {
+        it('highlights the second result', function() {
+          pressesKey(40);
+          runs(function() {
+            expect('.livefield-result:nth-child(2)').toBeHighlighted();
+          });
+        });
+      });
+    });
 
+    describe('when I press down on the last result', function() {
+      it('stays on the last result', function() {
+        typesCharacter();
+        pressesKey(40);
+        pressesKey(40);
+        pressesKey(40);
+        pressesKey(40);
         runs(function() {
-          expect($('.livefield-results').length).toEqual(0);
+          expect('.livefield-result:last-child').toBeHighlighted();
+        });
+      });
+    });
+
+    describe('when I press up with nothing highlighted', function() {
+      it('does nothing', function() {
+        typesCharacter();
+        pressesKey(38);
+        runs(function() {
+          expect('.livefield-highlighted').toMatch(0);
+        });
+      });
+
+    });
+
+    describe('when I press up on the first result', function() {
+      it('clears highlighting', function() {
+        typesCharacter();
+        pressesKey(40);
+        pressesKey(38);
+        runs(function() {
+          expect('.livefield-highlighted').toMatch(0);
+        });
+      });
+    });
+
+    describe('when I press up on the second result', function() {
+      it('highlights the first result', function() {
+        typesCharacter();
+        pressesKey(40);
+        pressesKey(40);
+        pressesKey(38);
+        runs(function() {
+          expect('.livefield-result:first-child').toBeHighlighted();
         });
       });
     });

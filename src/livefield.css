@@ -35,7 +35,7 @@ ul, ol, li {
   cursor: pointer; cursor: hand;
 }
 
-.livefield-active-result {
+.livefield-result.livefield-highlighted {
   background-color: #dee5ea;
 }
 

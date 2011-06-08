@@ -68,10 +68,10 @@
 
 (function($, window) {
 
-// @namespace Livefield
-var Livefield = {};
+// module Livefield
+var Livefield = { VERSION: '0.0.0' };
 
-// @class Livefield.Controller
+// class Livefield.Controller
 Livefield.Controller = function(options) {
   var self = this;
 
@@ -81,7 +81,7 @@ Livefield.Controller = function(options) {
       KEY_DOWN  = 40,
       KEY_ENTER = 13;
 
-  // private vars
+  // views
   var $input,
       $results,
       template;
@@ -95,8 +95,8 @@ Livefield.Controller = function(options) {
     });
     setupInput();
     setupStore();
+    setupTemplate();
     setupBindings();
-    self.state = 'ready';
   }
 
   function setupInput() {
@@ -109,6 +109,11 @@ Livefield.Controller = function(options) {
     });
   }
 
+  function setupTemplate() {
+    var $template = $($input.attr('data-template'));
+    template = Handlebars.compile($template.html());
+  }
+
   function setupBindings() {
     $input.bind('keydown', onKeyDown);
   }
@@ -116,8 +121,6 @@ Livefield.Controller = function(options) {
   // -- ACTIONS --
 
   function update() {
-    self.state = 'updating';
-
     if (hasValue()) {
       find();
     } else {
@@ -136,12 +139,9 @@ Livefield.Controller = function(options) {
       appendResults();
       $results.html('');
       for (var i in results) { var result = results[i];
-        $results.append(
-          $('<li class="livefield-result">' + result.name + '</li>')
-        );
+        $results.append(template(result));
       }
     }
-    self.state = 'ready';
   }
 
   // -- HELPERS --
@@ -168,13 +168,53 @@ Livefield.Controller = function(options) {
     }
   }
 
+  function highlightResult(which) {
+    switch (which) {
+    case 'next':
+      var $current = $results.find('.livefield-highlighted');
+      var $next;
+
+      if ($current.length > 0) {
+        $next = $current.next();
+      } else {
+        $next = $results.find('.livefield-result:first-child');
+      }
+
+      if ($next.length > 0) {
+        $current.removeClass('livefield-highlighted');
+        $next.addClass('livefield-highlighted');
+      }
+      break;
+    case 'prev':
+      var $current = $results.find('.livefield-highlighted');
+
+      if ($current.length > 0) {
+        var $prev = $current.prev();
+        $current.removeClass('livefield-highlighted');
+        $prev.addClass('livefield-highlighted');
+      }
+
+      break;
+    }
+  }
+
   // -- EVENT HANDLERS --
 
   function onKeyDown(event) {
-    self.state = 'updating';
-
     if (event.which === KEY_ESC) {
       $input.val('');
+    }
+
+    if (event.which === KEY_DOWN) {
+      event.preventDefault();
+      highlightResult('next');
+      return;
+    }
+
+    if (event.which === KEY_UP) {
+      event.preventDefault();
+      highlightResult('prev');
+      return;
     }
 
     setTimeout(update, 0); // deferred
@@ -189,7 +229,7 @@ Livefield.Controller = function(options) {
   setup();
 }
 
-// @class Livefield.Store
+// class Livefield.Store
 Livefield.Store = function(options) {
   var self = this;
 
@@ -206,6 +246,10 @@ Livefield.Store = function(options) {
         }
       });
     }
+  }
+
+  self.reset = function() {
+    self.data = null;
   }
 
   function setup() {
