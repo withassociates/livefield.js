@@ -17,11 +17,11 @@
  *
  * Or directly:
  *
- *     new Livefield({ input: '#my-input', source: '/options.json' });
+ *     new Livefield({ input: '#my-input', store: '/options.json' });
  *
  * ## Dependencies
  *
- * * jQuery >= 1.5
+ * * jQuery ~> 1.5
  *
  * ## Contributors
  *
@@ -53,3 +53,47 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
+
+(function($, window) {
+
+// @namespace Livefield
+var Livefield = {};
+
+// @class Livefield.Controller
+Livefield.Controller = function(options) {
+  var self = this;
+
+  // private vars
+  var $input;
+
+  // private functions
+  var setup,
+      setupInput;
+
+  // -- SETUP --
+
+  setup = function() {
+    $input = $(options.input);
+    setupInput();
+  }
+
+  setupInput = function() {
+    $input.addClass('livefield-input');
+  }
+
+  setup();
+}
+
+// jQuery plugin
+$.fn.livefield = function() {
+  return this.each(function() {
+    new Livefield.Controller({
+      input: this
+    });
+  });
+}
+
+// Make module globally available
+window.Livefield = Livefield;
+
+})(jQuery, window);

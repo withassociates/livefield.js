@@ -15,9 +15,10 @@
     <script src="src/livefield.js"></script>
     <!-- spec -->
     <script src="spec/spec_helper.js"></script>
-    <script src="spec/livefield_spec.js"></script>
+    <script src="spec/livefield/acceptance_spec.js"></script>
   </head>
   <body>
+    <div id="spec"></div>
     <script>
       jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
       jasmine.getEnv().execute();

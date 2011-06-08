@@ -16,11 +16,11 @@ We can activate with jQuery:
 
 Or directly:
 
-    new Livefield({ input: '#my-input', source: '/options.json' });
+    new Livefield({ input: '#my-input', store: '/options.json' });
 
 ## Dependencies
 
-* jQuery >= 1.5
+* jQuery ~> 1.5
 
 ## Contributors
 

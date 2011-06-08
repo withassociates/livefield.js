@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Livefield Spec Runner</title>
+    <!-- lib -->
+    <script src="lib/handlebars.1.0.0.beta.3.js"></script>
+    <script src="lib/jquery-1.6.1.min.js"></script>
+    <!-- src -->
+    <link rel="stylesheet" href="src/livefield.css" />
+    <script src="src/livefield.js"></script>
+  </head>
+  <body>
+    <input    id="my-input"
+            type="text"
+      data-store="spec/fixtures/my_store.json"
+       autofocus
+    />
+    <script>
+      $('#my-input').livefield();
+    </script>
+  </body>
+</html>

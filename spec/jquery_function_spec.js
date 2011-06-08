@@ -1,7 +1,6 @@
 describe('$.fn.livefield', function() {
-  template('simple_input.html');
-
   beforeEach(function() {
+    $('<input type="text" id="my-input" />').appendTo(document.body);
     $('#my-input').livefield();
   });
 
