@@ -18,7 +18,7 @@ Or directly:
 
     new Livefield({ input: '#my-input' });
 
-## Simple Store
+### Simple Store
 
 By default, Livefield expects to retrieve results from a url.
 
