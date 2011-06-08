@@ -27,7 +27,7 @@ describe('Livefield', function() {
 
       it('displays a list of options', function() {
         waitsFor(function() {
-          return $('.livefield-options').length > 0;
+          return $('.livefield-results').length > 0;
         }, 'list of options to appear', 250);
       });
     });

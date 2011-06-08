@@ -116,6 +116,7 @@ Livefield.Controller = function(options) {
       removeResults();
     } else {
       appendResults();
+      console.log(results);
       for (var i in results) { var result = results[i];
         $results.append(
           $('<li>' + result.name + '</li>')
@@ -169,9 +170,13 @@ Livefield.Store = function(options) {
     if (self.data) {
       callback(self.data);
     } else {
-      $.get(self.url, function(data) {
-        self.data = data;
-        callback(self.data);
+      $.ajax({
+        url: self.url,
+        dataType: 'json',
+        success: function(data) {
+          self.data = data;
+          callback(self.data);
+        }
       });
     }
   }
