@@ -131,7 +131,7 @@ Livefield.Controller = function(options) {
   }
 
   function setupBindings() {
-    $input.bind('keydown', onKeyDown);
+    $input.bind('keydown keypress', onKeyDown);
   }
 
   // -- ACTIONS --
@@ -230,10 +230,6 @@ Livefield.Controller = function(options) {
   // -- EVENT HANDLERS --
 
   function onKeyDown(event) {
-    if (event.which === KEY_ESC) {
-      $input.val('');
-    }
-
     if (event.which === KEY_DOWN && $results) {
       event.preventDefault();
       highlightResult('next');
@@ -246,6 +242,17 @@ Livefield.Controller = function(options) {
       highlightResult('prev');
       updateValue();
       return;
+    }
+
+    if (event.which === KEY_ENTER) {
+      event.preventDefault();
+      $input.blur();
+      removeResults();
+      return;
+    }
+
+    if (event.which === KEY_ESC) {
+      $input.val('');
     }
 
     setTimeout(update, 0); // deferred

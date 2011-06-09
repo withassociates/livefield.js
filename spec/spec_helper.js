@@ -1,5 +1,6 @@
 function typesCharacter(char) {
   runs(function() {
+    $('#my-input').focus();
     $('#my-input').val(char || 'a').trigger('keydown');
   });
   waits(100);
@@ -29,12 +30,19 @@ function pressesKey(code) {
 }
 
 LivefieldMatchers = {
+
   toHaveClass: function(klass) {
     return $(this.actual).hasClass(klass);
   },
+
   toBeHighlighted: function() {
     return $(this.actual).hasClass('livefield-highlighted');
   },
+
+  toHaveFocus: function() {
+    return $(this.actual)[0] == $('*:focus')[0];
+  },
+
   toMatch: function(count) {
     if (count === undefined) {
       return $(this.actual).length > 0;
@@ -42,4 +50,5 @@ LivefieldMatchers = {
       return $(this.actual).length === count;
     }
   }
+
 }

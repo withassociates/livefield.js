@@ -58,7 +58,6 @@ describe('Livefield', function() {
     });
   });
 
-
   describe('when I press ESC', function() {
     it('clears the input', function() {
       typesCharacter();
@@ -190,6 +189,32 @@ describe('Livefield', function() {
     it('sets the value', function() {
       runs(function() {
         expect(this.$input.val()).toEqual('/about-us');
+      });
+    });
+  });
+
+  describe('given I have selected a result, when I press enter', function() {
+    beforeEach(function() {
+      typesCharacter();
+      pressesKey('down');
+      pressesKey('enter');
+    });
+
+    it('removes the results list', function() {
+      runs(function() {
+        expect('.livefield-results').toMatch(0);
+      });
+    });
+
+    it('sets the value', function() {
+      runs(function() {
+        expect(this.$input.val()).toEqual('/about-us');
+      });
+    });
+
+    it('blurs the input', function() {
+      runs(function() {
+        expect(this.$input).not.toHaveFocus();
       });
     });
   });
