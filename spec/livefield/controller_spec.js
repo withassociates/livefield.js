@@ -11,7 +11,7 @@ describe('Livefield.Controller', function() {
       var controller = new Livefield.Controller({
         input: this.$input
       });
-      expect(controller.store.url).toEqual('my_store.json');
+      expect(controller.store.urlFor()).toEqual('my_store.json');
     });
   });
 
@@ -20,7 +20,7 @@ describe('Livefield.Controller', function() {
       var controller = new Livefield.Controller({
         input: this.$input, store: 'my_store.json'
       });
-      expect(controller.store.url).toEqual('my_store.json');
+      expect(controller.store.urlFor()).toEqual('my_store.json');
     });
   });
 

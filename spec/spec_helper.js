@@ -29,6 +29,20 @@ function pressesKey(code) {
   waits();
 }
 
+function blursInput() {
+  runs(function() {
+    this.$input.blur();
+  });
+  waits();
+}
+
+function focusesInput() {
+  runs(function() {
+    this.$input.focus();
+  });
+  waits();
+}
+
 LivefieldMatchers = {
 
   toHaveClass: function(klass) {

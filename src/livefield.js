@@ -132,6 +132,8 @@ Livefield.Controller = function(options) {
 
   function setupBindings() {
     $input.bind('keydown keypress', onKeyDown);
+    $input.bind('focus', onFocus);
+    $input.bind('blur', onBlur);
   }
 
   // -- ACTIONS --
@@ -173,6 +175,11 @@ Livefield.Controller = function(options) {
     }
   }
 
+  function commit() {
+    $input.blur();
+    removeResults();
+  }
+
   // -- HELPERS --
 
   function value() {
@@ -185,8 +192,11 @@ Livefield.Controller = function(options) {
 
   function appendResults() {
     if (!$results) {
-      $results = $('<ul class="livefield-results" />');
-      $results.insertAfter($input);
+      $results = $('<ul class="livefield-results" />').
+        delegate('.livefield-result', 'mouseover', onMouseOver).
+        delegate('.livefield-result', 'mouseout', onMouseOut).
+        delegate('.livefield-result', 'mousedown', onMouseDown).
+        insertAfter($input);
     }
   }
 
@@ -199,6 +209,10 @@ Livefield.Controller = function(options) {
 
   function highlightResult(which) {
     switch (which) {
+    case 'none':
+      $results.find('.livefield-highlighted').
+        removeClass('livefield-highlighted');
+      break;
     case 'next':
       var $current = $results.find('.livefield-highlighted');
       var $next;
@@ -224,6 +238,11 @@ Livefield.Controller = function(options) {
       }
 
       break;
+    default:
+      var $current = $results.find('.livefield-highlighted');
+      var $chosen = $(which);
+      $current.removeClass('livefield-highlighted');
+      $chosen.addClass('livefield-highlighted');
     }
   }
 
@@ -246,8 +265,7 @@ Livefield.Controller = function(options) {
 
     if (event.which === KEY_ENTER) {
       event.preventDefault();
-      $input.blur();
-      removeResults();
+      commit();
       return;
     }
 
@@ -256,6 +274,30 @@ Livefield.Controller = function(options) {
     }
 
     setTimeout(update, 0); // deferred
+  }
+
+  function onMouseOver(event) {
+    highlightResult(this);
+    updateValue();
+  }
+
+  function onMouseOut(event) {
+    highlightResult('none');
+    updateValue();
+  }
+
+  function onMouseDown(event) {
+    highlightResult(this);
+    updateValue();
+    commit();
+  }
+
+  function onFocus(event) {
+    update();
+  }
+
+  function onBlur(event) {
+    removeResults();
   }
 
   function onFindComplete(results) {
@@ -275,14 +317,15 @@ Livefield.Store = function(options) {
     if (self.data) {
       callback(self.data);
     } else {
-      $.ajax({
-        url: self.url,
-        dataType: 'json',
-        success: function(data) {
+      $.getJSON(self.urlFor(query)).then(
+        function(data) {
           self.data = data;
           callback(self.data);
+        },
+        function() { // TODO
+          $.error('Store failed to fetch data');
         }
-      });
+      );
     }
   }
 
@@ -290,8 +333,12 @@ Livefield.Store = function(options) {
     self.data = null;
   }
 
+  self.urlFor = function(query) {
+    return self.urlTemplate({ query: query });
+  }
+
   function setup() {
-    self.url = options.url;
+    self.urlTemplate = Handlebars.compile(options.url);
   }
 
   setup();

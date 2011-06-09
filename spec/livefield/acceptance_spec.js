@@ -261,4 +261,119 @@ describe('Livefield', function() {
     });
   });
 
+  describe('given the input has a value', function() {
+    beforeEach(function() {
+      typesCharacter();
+      blursInput();
+    });
+
+    describe('when the input loses focus', function() {
+      beforeEach(function() {
+        focusesInput();
+        blursInput();
+      });
+
+      it('removes results', function() {
+        runs(function() {
+          expect('.livefield-results').not.toMatchElements();
+        });
+      });
+    });
+
+    describe('when the input gains focus', function() {
+      beforeEach(function() {
+        blursInput();
+        focusesInput();
+      });
+
+      it('shows results', function() {
+        runs(function() {
+          expect('.livefield-results').toMatchElements();
+        });
+      });
+    });
+
+  });
+
+  describe('when I mouse over the first result', function() {
+    beforeEach(function() {
+      typesCharacter();
+      runs(function() {
+        $('.livefield-result:first-child').trigger('mouseover');
+      });
+    });
+
+    it('highlights the first result', function() {
+      runs(function() {
+        expect('.livefield-result:first-child').
+        toHaveClass('livefield-highlighted');
+      });
+    });
+
+    describe('and then the second', function() {
+      beforeEach(function() {
+        runs(function() {
+          $('.livefield-result:nth-child(1)').trigger('mouseout');
+          $('.livefield-result:nth-child(2)').trigger('mouseover');
+        });
+      });
+
+      it('removes highlights from the first', function() {
+        runs(function() {
+          expect('.livefield-result:nth-child(1)').
+          not.toHaveClass('livefield-highlighted');
+        });
+      });
+
+      it('highlights the second', function() {
+        runs(function() {
+          expect('.livefield-result:nth-child(2)').
+          toHaveClass('livefield-highlighted');
+        });
+      });
+    });
+
+    describe('and then mouseout entirely', function() {
+      beforeEach(function() {
+        runs(function() {
+          $('.livefield-result:first-child').trigger('mouseout');
+        });
+      });
+
+      it('removes all highlights', function() {
+        runs(function() {
+          expect('.livefield-highlighted').not.toMatchElements();
+        });
+      });
+    });
+
+  });
+
+  describe('when I click a result', function() {
+    beforeEach(function() {
+      typesCharacter();
+      runs(function() {
+        $('.livefield-result:first-child').trigger('mousedown');
+      });
+    });
+
+    it('sets the value', function() {
+      runs(function() {
+        expect(this.$input.val()).toEqual('/about-us');
+      });
+    });
+
+    it('removes the results', function() {
+      runs(function() {
+        expect('.livefield-results').not.toMatchElements();
+      });
+    });
+
+    it('blurs the input', function() {
+      runs(function() {
+        expect(this.$input).not.toHaveFocus();
+      });
+    });
+  });
+
 });
