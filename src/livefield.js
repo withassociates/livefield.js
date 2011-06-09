@@ -37,6 +37,13 @@
  *
  *     <input type="text" data-template="#result-template" />
  *
+ *     <script type="template/handlbars" id="result-template">
+ *       <li class="liveview-result" data-value="{{value}}">
+ *         <span class="name">{{name}}</span>
+ *         <span class="path">{{path}}</span>
+ *       </li>
+ *     </script>
+ *
  * ## Dependencies
  *
  * * jQuery ~> 1.5

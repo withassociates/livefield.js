@@ -11,6 +11,9 @@
     <script src="src/livefield.js"></script>
   </head>
   <body>
+
+    <p>Run the <a href="spec.html">spec</a>.</p>
+
     <input
      id="my-input"
      type="text"
@@ -18,15 +21,17 @@
      data-template="#livefield-result-template"
      autofocus
     />
+
     <script type="template/handlebars" id="livefield-result-template">
       <li class="livefield-result" data-value="{{path}}">
         <span class="name">{{name}}</span>
         <span class="path">{{path}}</span>
       </li>
     </script>
+
     <script>
       $('#my-input').livefield();
     </script>
-    <p>Run the <a href="spec.html">spec</a>.</p>
+
   </body>
 </html>
