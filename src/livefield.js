@@ -56,8 +56,8 @@
  *
  * ## Dependencies
  *
- * * jQuery ~> 1.5
- * * Handlebars ~> 1.0
+ * * [jQuery](http://jquery.com/) ~> 1.5
+ * * [Handlebars](http://handlebars.strobeapp.com/) ~> 1.0
  *
  * ## Contributors
  *

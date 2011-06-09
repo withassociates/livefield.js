@@ -31,7 +31,7 @@ This is how we'd implement livefield:
       </li>
     </script>
 
-    <!-- and active livefield -->
+    <!-- and activate livefield -->
     <script>
       $('#my-input').livefield();
     </script>
@@ -44,7 +44,7 @@ receive just the `query` paramters.
 
 ### Data-template
 
-Your input also needs `data-template`. This should a jQuery-compatible
+Your input also needs `data-template`. This should be a jQuery-compatible
 selector for the element containing the template. Typically, this will
 be in a `script` tag as in the example above.
 
@@ -55,8 +55,8 @@ The value of this attribute will be used to populate your input.
 
 ## Dependencies
 
-* jQuery ~> 1.5
-* Handlebars ~> 1.0
+* [jQuery](http://jquery.com/) ~> 1.5
+* [Handlebars](http://handlebars.strobeapp.com/) ~> 1.0
 
 ## Contributors
 
