@@ -3,6 +3,8 @@ describe('Livefield', function() {
   beforeEach(function() {
     this.addMatchers(LivefieldMatchers);
 
+    $('<div id="spec" />').appendTo('body');
+
     this.$input =
       $('<input />').
       attr('type'         , 'text').
