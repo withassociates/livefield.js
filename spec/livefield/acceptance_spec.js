@@ -32,7 +32,7 @@ describe('Livefield', function() {
     it('displays a list of results', function() {
       typesCharacter();
       runs(function() {
-        expect('.livefield-result').toMatch(3);
+        expect('.livefield-result').toMatchElements(3);
       });
     });
   });
@@ -47,13 +47,13 @@ describe('Livefield', function() {
 
     it('has a name', function() {
       runs(function() {
-        expect(this.$result.find('.name')).toMatch();
+        expect(this.$result.find('.name')).toMatchElements();
       });
     });
 
     it('has a path', function() {
       runs(function() {
-        expect(this.$result.find('.path')).toMatch();
+        expect(this.$result.find('.path')).toMatchElements();
       });
     });
   });
@@ -73,7 +73,7 @@ describe('Livefield', function() {
       typesCharacter();
       clearsInput();
       runs(function() {
-        expect('.livefield-results').toMatch(0);
+        expect('.livefield-results').not.toMatchElements();
       });
     });
   });
@@ -141,7 +141,7 @@ describe('Livefield', function() {
 
     it('does not highlight anything', function() {
       runs(function() {
-        expect('.livefield-highlighted').toMatch(0);
+        expect('.livefield-highlighted').not.toMatchElements();
       });
     });
 
@@ -161,7 +161,7 @@ describe('Livefield', function() {
 
     it('clears highlighting', function() {
       runs(function() {
-        expect('.livefield-highlighted').toMatch(0);
+        expect('.livefield-highlighted').not.toMatchElements();
       });
     });
 
@@ -202,7 +202,7 @@ describe('Livefield', function() {
 
     it('removes the results list', function() {
       runs(function() {
-        expect('.livefield-results').toMatch(0);
+        expect('.livefield-results').not.toMatchElements();
       });
     });
 
@@ -219,8 +219,40 @@ describe('Livefield', function() {
     });
   });
 
+  describe('given there are result, but I have not selected any, when I press enter', function() {
+    beforeEach(function() {
+      spyOn(window, 'onerror');
+      typesCharacter();
+      pressesKey('enter');
+    });
+
+    it('does not cause any errors', function() {
+      runs(function() {
+        expect(window.onerror).not.toHaveBeenCalled();
+      });
+    });
+
+    it('does not change the value', function() {
+      runs(function() {
+        expect(this.$input.val()).toEqual('a');
+      });
+    });
+
+    it('blurs the input', function() {
+      runs(function() {
+        expect(this.$input).not.toHaveFocus();
+      });
+    });
+
+    it('removes the results', function() {
+      runs(function() {
+        expect('.livefield-results').not.toMatchElements();
+      });
+    });
+  });
+
   describe('given there are no results, when I press down', function() {
-    it('no errors should be thrown', function() {
+    it('does not cause any errors', function() {
       spyOn(window, 'onerror');
       pressesKey('down');
       runs(function() {

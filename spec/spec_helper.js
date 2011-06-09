@@ -43,7 +43,7 @@ LivefieldMatchers = {
     return $(this.actual)[0] == $('*:focus')[0];
   },
 
-  toMatch: function(count) {
+  toMatchElements: function(count) {
     if (count === undefined) {
       return $(this.actual).length > 0;
     } else {
