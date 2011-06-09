@@ -21,20 +21,11 @@ describe('Livefield.Store', function() {
       it('inserts the query into the template', function() {
         spyOn(jQuery, 'getJSON').andCallThrough();
         var store = new Livefield.Store({
-          url: 'spec/fixtures.my_json.json?q={{query}}'
+          url: '/pages/search/{{query}}'
         });
-        var callback = jasmine.createSpy('callback');
-
-        store.find('foo', callback);
-
-        expect(jQuery.getJSON).toHaveBeenCalledWith('spec/fixtures.my_json.json?q=foo');
+        store.find('foo', function() {});
+        expect(jQuery.getJSON).toHaveBeenCalledWith('/pages/search/foo');
       });
-    });
-  });
-
-  describe('#urlFor', function() {
-    describe('with a template url and query value', function() {
-
     });
   });
 
