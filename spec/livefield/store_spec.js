@@ -1,9 +1,9 @@
 describe('Livefield.Store', function() {
 
   describe('#find', function() {
-    it('fetches the store’s url', function() {
-      spyOn(jQuery, 'getJSON').andCallThrough();
+    it('calls jQuery.getJSON', function() {
       var store = new Livefield.Store({ url: 'spec/fixtures/my_store.json' });
+      spyOn(jQuery, 'getJSON').andCallThrough();
       store.find('foo', function() {});
       expect(jQuery.getJSON).toHaveBeenCalledWith('spec/fixtures/my_store.json');
     });
@@ -11,7 +11,6 @@ describe('Livefield.Store', function() {
     it('calls callback with data', function() {
       var store = new Livefield.Store({ url: 'spec/fixtures/my_store.json' });
       var callback = jasmine.createSpy('callback');
-
       runs(function() { store.find('foo', callback) });
       waits();
       runs(function() { expect(callback).toHaveBeenCalled() });
@@ -19,22 +18,11 @@ describe('Livefield.Store', function() {
 
     describe('with a templated url', function() {
       it('inserts the query into the template', function() {
+        var store = new Livefield.Store({ url: '/pages/search/{{query}}' });
         spyOn(jQuery, 'getJSON').andCallThrough();
-        var store = new Livefield.Store({
-          url: '/pages/search/{{query}}'
-        });
         store.find('foo', function() {});
         expect(jQuery.getJSON).toHaveBeenCalledWith('/pages/search/foo');
       });
-    });
-  });
-
-  describe('#reset', function() {
-    it('wipes store.data', function() {
-      var store = new Livefield.Store({ url: 'spec/fixtrues/my_store.json' });
-      store.data = {};
-      store.reset();
-      expect(store.data).toBeNull();
     });
   });
 

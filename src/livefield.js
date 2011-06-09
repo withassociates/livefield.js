@@ -326,32 +326,28 @@ Livefield.Controller = function(options) {
 Livefield.Store = function(options) {
   var self = this;
 
+  var urlTemplate,
+      cache = {};
+
   self.find = function(query, callback) {
-    if (self.data) {
-      callback(self.data);
+    var url = urlTemplate({ query: query });
+
+    if (cache[url]) {
+      callback(cache[url]);
     } else {
-      $.getJSON(self.urlFor(query)).then(
-        function(data) {
-          self.data = data;
-          callback(self.data);
-        },
-        function() { // TODO
-          $.error('Store failed to fetch data');
-        }
-      );
+      $.getJSON(url).then(function(data) {
+        cache[url] = data;
+        callback(cache[url]);
+      }, onFail);
     }
   }
 
-  self.reset = function() {
-    self.data = null;
-  }
-
-  self.urlFor = function(query) {
-    return self.urlTemplate({ query: query });
+  function onFail() { // TODO
+    $.error('Store failed to fetch data');
   }
 
   function setup() {
-    self.urlTemplate = Handlebars.compile(options.url);
+    urlTemplate = Handlebars.compile(options.url);
   }
 
   setup();
