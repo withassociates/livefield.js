@@ -15,7 +15,14 @@ function clearsInput() {
 function pressesKey(code) {
   runs(function() {
     var e = $.Event('keydown');
-    e.which = code;
+
+    e.which = {
+      'up'    : 38,
+      'down'  : 40,
+      'esc'   : 27,
+      'enter' : 13
+    }[code];
+
     $('#my-input').trigger(e);
   });
   waits();

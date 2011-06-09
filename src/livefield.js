@@ -92,7 +92,8 @@ Livefield.Controller = function(options) {
   // views
   var $input,
       $results,
-      template;
+      template,
+      savedVal;
 
   // -- SETUP --
 
@@ -148,6 +149,19 @@ Livefield.Controller = function(options) {
       $results.html('');
       for (var i in results) { var result = results[i];
         $results.append(template(result));
+      }
+    }
+  }
+
+  function updateValue() {
+    var $chosen = $results.find('.livefield-highlighted').first();
+    if ($chosen.length > 0) {
+      if (savedVal == null) savedVal = $input.val();
+      $input.val($chosen.attr('data-value'));
+    } else {
+      if (savedVal) {
+        $input.val(savedVal);
+        savedVal = null;
       }
     }
   }
@@ -213,15 +227,17 @@ Livefield.Controller = function(options) {
       $input.val('');
     }
 
-    if (event.which === KEY_DOWN) {
+    if (event.which === KEY_DOWN && $results) {
       event.preventDefault();
       highlightResult('next');
+      updateValue();
       return;
     }
 
-    if (event.which === KEY_UP) {
+    if (event.which === KEY_UP && $results) {
       event.preventDefault();
       highlightResult('prev');
+      updateValue();
       return;
     }
 
