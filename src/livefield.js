@@ -7,42 +7,52 @@
  *
  * ## Usage
  *
- * Given an input like this:
+ * As a basic use case, let's say we have an input in a cms that lets users
+ * specify which page a thumbnail ought to link to.
  *
- *     <input type="text" data-source="my_store.json" id="my-input" />
+ * We have an action on the server `/pages/search` that will find matching
+ * pages and return them as JSON.
  *
- * We can activate with jQuery:
+ * This is how we'd implement livefield:
  *
- *     $('#my-input').livefield();
+ *     <!-- input to bind to -->
+ *     <input
+ *       type="text"
+ *       name="link_path"
+ *       id="my-input"
+ *       data-store="/pages/search/{{query}}"
+ *       data-template="#link-template"
+ *     />
  *
- * Or directly:
- *
- *     new Livefield.Controller({ input: '#my-input' });
- *
- * ### Simple Store
- *
- * By default, Livefield expects to retrieve results from a url.
- *
- * You can specify this url on the input:
- *
- *     <input data-store="my_store.json" />
- *
- * Or pass it in explicitly:
- *
- *     new Livefield.Controller({ store: 'my_store.json' })
- *
- * ### Result templates
- *
- * Specify the selector for the result template on the input element:
- *
- *     <input type="text" data-template="#result-template" />
- *
- *     <script type="template/handlbars" id="result-template">
- *       <li class="liveview-result" data-value="{{value}}">
+ *     <!-- template for result options -->
+ *     <script type="template/handlebars" id="link-template">
+ *       <li data-value="{{path}}">
  *         <span class="name">{{name}}</span>
  *         <span class="path">{{path}}</span>
  *       </li>
  *     </script>
+ *
+ *     <!-- and active livefield -->
+ *     <script>
+ *       $('#my-input').livefield();
+ *     </script>
+ *
+ * ### Data-store
+ *
+ * Your input needs `data-store` to specify the lookup URL. This can be
+ * plain text or a handlebars template. If it's a template, it will
+ * receive just the `query` paramters.
+ *
+ * ### Data-template
+ *
+ * Your input also needs `data-template`. This should a jQuery-compatible
+ * selector for the element containing the template. Typically, this will
+ * be in a `script` tag as in the example above.
+ *
+ * ### Data-value
+ *
+ * Your result option template needs to have the `data-value` option.
+ * The value of this attribute will be used to populate your input.
  *
  * ## Dependencies
  *
@@ -156,8 +166,11 @@ Livefield.Controller = function(options) {
     } else {
       appendResults();
       $results.html('');
-      for (var i in results) { var result = results[i];
-        $results.append(template(result));
+      for (var i in results) {
+        var result = results[i];
+        var $result = $(template(result));
+        $result.addClass('livefield-result');
+        $result.appendTo($results);
       }
     }
   }
