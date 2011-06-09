@@ -32,7 +32,7 @@
  *       </li>
  *     </script>
  *
- *     <!-- and active livefield -->
+ *     <!-- and activate livefield -->
  *     <script>
  *       $('#my-input').livefield();
  *     </script>
