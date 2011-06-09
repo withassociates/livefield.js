@@ -45,7 +45,7 @@
  *
  * ### Data-template
  *
- * Your input also needs `data-template`. This should a jQuery-compatible
+ * Your input also needs `data-template`. This should be a jQuery-compatible
  * selector for the element containing the template. Typically, this will
  * be in a `script` tag as in the example above.
  *
