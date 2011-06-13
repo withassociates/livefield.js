@@ -164,6 +164,7 @@ Livefield.Controller = function(options) {
     if (results.length === 0) {
       removeResults();
     } else {
+      savedVal = value();
       appendResults();
       $results.html('');
       for (var i in results) {
@@ -176,6 +177,8 @@ Livefield.Controller = function(options) {
   }
 
   function updateValue() {
+    if (!$results) return;
+
     var $chosen = $results.find('.livefield-highlighted').first();
     if ($chosen.length > 0) {
       if (savedVal == null) savedVal = $input.val();
@@ -302,6 +305,7 @@ Livefield.Controller = function(options) {
       $input.val('');
     }
 
+    self.store.stop();
     setTimeout(update, 0); // deferred
   }
 
@@ -346,15 +350,25 @@ Livefield.Controller = function(options) {
 Livefield.Store = function(options) {
   var self = this;
 
-  var MAX_QUEUE_LENGTH = 2;
+  var MAX_QUEUE_LENGTH = 1;
 
-  var urlTemplate,
+  var transport,
+      urlTemplate,
       cache = {};
 
   self.find = function(query, callback) {
+    self.stop();
     self.queue.push([query, callback]);
     while (self.queue.length > MAX_QUEUE_LENGTH) self.queue.shift();
     if (!self.busy) nextInQueue();
+  }
+
+  self.stop = function() {
+    if (transport) {
+      transport.abort();
+      transport = null;
+    }
+    self.busy = false;
   }
 
   function nextInQueue() {
@@ -370,7 +384,9 @@ Livefield.Store = function(options) {
     if (cache[url]) {
       onSuccess(url, callback);
     } else {
-      $.getJSON(url).then(function(data) {
+      transport = $.getJSON(url).then(function(data) {
+        if (!self.busy) return;
+        transport = null;
         cache[url] = data;
         onSuccess(url, callback);
       }, onFail);
@@ -385,8 +401,11 @@ Livefield.Store = function(options) {
 
   function onFail() { // TODO
     // $.error('Store failed to fetch data');
-    self.busy = false;
-    nextInQueue();
+    // transport = null;
+    // if (self.busy) {
+    //   self.busy = false;
+    //   nextInQueue();
+    // }
   }
 
   function setup() {
