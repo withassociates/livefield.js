@@ -1,3 +1,24 @@
+function createContainer() {
+  $('<div id="spec" />').appendTo('body');
+}
+
+function clearContainer() {
+  $('#spec').html('');
+}
+
+function createInput() {
+  var $input =
+    $('<input />').
+    attr('type'         , 'text').
+    attr('id'           , 'my-input').
+    attr('data-store'   , 'spec/fixtures/my_store.json').
+    attr('data-template', '#livefield-result-template');
+
+  $('#spec').append($input);
+
+  return $input;
+}
+
 function typesCharacter(char) {
   runs(function() {
     $('#my-input').focus();

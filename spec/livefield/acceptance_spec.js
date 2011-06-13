@@ -1,26 +1,15 @@
 describe('Livefield', function() {
 
   beforeEach(function() {
+    createContainer();
     this.addMatchers(LivefieldMatchers);
-
-    $('<div id="spec" />').appendTo('body');
-
-    this.$input =
-      $('<input />').
-      attr('type'         , 'text').
-      attr('id'           , 'my-input').
-      attr('data-store'   , 'spec/fixtures/my_store.json').
-      attr('data-template', '#livefield-result-template');
-
-    $('#spec').append(this.$input);
-
+    this.$input = createInput();
     this.controller = new Livefield.Controller({ input: '#my-input' });
   });
 
   afterEach(function() {
-    $('#spec').html('');
+    clearContainer();
   });
-
 
   describe('on creation', function() {
     it('adds a class onto the input', function() {

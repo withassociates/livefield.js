@@ -330,7 +330,7 @@ Livefield.Store = function(options) {
       cache = {};
 
   self.find = function(query, callback) {
-    var url = urlTemplate({ query: query });
+    var url = urlTemplate.replace(':query', query);
 
     if (cache[url]) {
       callback(cache[url]);
@@ -347,7 +347,7 @@ Livefield.Store = function(options) {
   }
 
   function setup() {
-    urlTemplate = Handlebars.compile(options.url);
+    urlTemplate = options.url;
   }
 
   setup();
