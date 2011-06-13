@@ -209,14 +209,30 @@ Livefield.Controller = function(options) {
         delegate('.livefield-result', 'mouseover', onMouseOver).
         delegate('.livefield-result', 'mouseout', onMouseOut).
         delegate('.livefield-result', 'mousedown', onMouseDown).
-        insertAfter($input);
+        appendTo('body');
+      positionResults();
+      $(window).bind('resize', positionResults);
     }
+  }
+
+  function positionResults() {
+    var padding = $results.outerWidth() - $results.innerWidth();
+    var offsetLeft = 0;
+
+    $results.css({
+      position : 'absolute',
+      zIndex   : '1000',
+      width    : ($input.outerWidth() - padding) + 'px',
+      left     : ($input.offset().left + offsetLeft) + 'px',
+      top      : $input.offset().top + $input.outerHeight() + 'px'
+    });
   }
 
   function removeResults() {
     if ($results) {
       $results.remove();
       $results = null;
+      $(window).unbind('resize', positionResults);
     }
   }
 
@@ -354,11 +370,9 @@ Livefield.Store = function(options) {
 }
 
 // jQuery plugin
-$.fn.livefield = function() {
+$.fn.livefield = function(options) {
   return this.each(function() {
-    new Livefield.Controller({
-      input: this
-    });
+    new Livefield.Controller($.extend(options, { input: this }));
   });
 }
 

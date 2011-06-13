@@ -8,7 +8,7 @@ describe('Livefield', function() {
   });
 
   afterEach(function() {
-    clearContainer();
+    clear();
   });
 
   describe('on creation', function() {

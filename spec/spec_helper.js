@@ -1,9 +1,16 @@
 function createContainer() {
-  $('<div id="spec" />').appendTo('body');
+  if ($('#spec').length === 0) {
+    $('<div id="spec" />').appendTo('body');
+  }
 }
 
 function clearContainer() {
   $('#spec').html('');
+}
+
+function clear() {
+  clearContainer();
+  $('.livefield-results').remove();
 }
 
 function createInput() {
