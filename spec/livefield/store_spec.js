@@ -12,7 +12,7 @@ describe('Livefield.Store', function() {
       var store = new Livefield.Store({ url: 'spec/fixtures/my_store.json' });
       var callback = jasmine.createSpy('callback');
       runs(function() { store.find('foo', callback) });
-      waits();
+      waits(100);
       runs(function() { expect(callback).toHaveBeenCalled() });
     });
 
@@ -24,6 +24,20 @@ describe('Livefield.Store', function() {
         expect(jQuery.getJSON).toHaveBeenCalledWith('/pages/search/foo');
       });
     });
+  });
+
+  describe('#queue', function() {
+    beforeEach(function() {
+      this.store = new Livefield.Store({ url: 'spec/fixtures/my_store.json' });
+    });
+
+    it('adds new requests to the queue', function() {
+      var args = ['foo', function() {}];
+      spyOn(this.store.queue, 'push').andCallThrough();
+      this.store.find(args[0], args[1]);
+      expect(this.store.queue.push).toHaveBeenCalledWith(args);
+    });
+
   });
 
 });

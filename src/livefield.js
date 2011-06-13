@@ -322,7 +322,11 @@ Livefield.Controller = function(options) {
   }
 
   function onFocus(event) {
+    updateValue();
     update();
+    setTimeout(function() {
+      $input.select();
+    }, 0);
   }
 
   function onBlur(event) {
@@ -342,28 +346,52 @@ Livefield.Controller = function(options) {
 Livefield.Store = function(options) {
   var self = this;
 
+  var MAX_QUEUE_LENGTH = 2;
+
   var urlTemplate,
       cache = {};
 
   self.find = function(query, callback) {
-    var url = urlTemplate.replace(':query', query);
+    self.queue.push([query, callback]);
+    while (self.queue.length > MAX_QUEUE_LENGTH) self.queue.shift();
+    if (!self.busy) nextInQueue();
+  }
+
+  function nextInQueue() {
+    if (self.queue.length === 0) return;
+
+    self.busy = true;
+
+    var args     = self.queue.shift(),
+        query    = args[0].replace(/\/+/g, ' '),
+        callback = args[1];
+        url      = urlTemplate.replace(':query', query);
 
     if (cache[url]) {
-      callback(cache[url]);
+      onSuccess(url, callback);
     } else {
       $.getJSON(url).then(function(data) {
         cache[url] = data;
-        callback(cache[url]);
+        onSuccess(url, callback);
       }, onFail);
     }
   }
 
+  function onSuccess(url, callback) {
+    callback(cache[url]);
+    self.busy = false;
+    nextInQueue();
+  }
+
   function onFail() { // TODO
-    $.error('Store failed to fetch data');
+    // $.error('Store failed to fetch data');
+    self.busy = false;
+    nextInQueue();
   }
 
   function setup() {
     urlTemplate = options.url;
+    self.queue = [];
   }
 
   setup();
