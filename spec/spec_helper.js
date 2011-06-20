@@ -61,7 +61,7 @@ function blursInput() {
   runs(function() {
     this.$input.blur();
   });
-  waits();
+  waits(100);
 }
 
 function focusesInput() {

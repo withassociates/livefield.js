@@ -39,7 +39,7 @@ describe('Livefield results list', function() {
   });
 
   it('has z-index 1000', function() {
-    expect(this.$results.css('z-index')).toEqual('1000');
+    expect(this.$results.css('z-index').toString()).toEqual('1000');
   });
 
   it('is appended to body', function() {
