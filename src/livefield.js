@@ -210,8 +210,8 @@ Livefield.Controller = function(options) {
   function appendResults() {
     if (!$results) {
       $results = $('<ul class="livefield-results" />').
-        delegate('.livefield-result', 'mouseover', onMouseOver).
         delegate('.livefield-result', 'mouseout', onMouseOut).
+        delegate('.livefield-result', 'mouseover', onMouseOver).
         delegate('.livefield-result', 'mousedown', onMouseDown).
         appendTo('body');
       positionResults();
@@ -221,18 +221,23 @@ Livefield.Controller = function(options) {
 
   function positionResults() {
     var padding       = $results.outerWidth() - $results.innerWidth(),
-        bodyHeight    = $('body').height(),
+        resultsHeight = $results.outerHeight(true);
+
+    $results.hide();
+
+    var bodyHeight    = $('body').height(),
         inputTop      = $input.offset().top,
         inputHeight   = $input.outerHeight(),
         inputBottom   = inputTop + inputHeight,
-        resultsHeight = $results.outerHeight(),
-        hasSpaceBelow = bodyHeight - inputTop > resultsHeight,
-        hasSpaceAbove = inputTop > resultsHeight;
+        hasSpaceBelow = (bodyHeight - inputTop > resultsHeight),
+        hasSpaceAbove = (inputTop > resultsHeight);
 
     if (hasSpaceBelow || !hasSpaceAbove) {
       var top = inputBottom;
+      $results.removeClass('livefield-drop-up');
     } else {
       var top = inputTop - resultsHeight;
+      $results.addClass('livefield-drop-up');
     }
 
     $results.css({
@@ -241,7 +246,7 @@ Livefield.Controller = function(options) {
       width    : ($input.outerWidth() - padding) + 'px',
       left     : $input.offset().left + 'px',
       top      : top + 'px'
-    });
+    }).show();
   }
 
   function removeResults() {
