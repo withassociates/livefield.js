@@ -93,7 +93,7 @@
 (function($, window) {
 
 // module Livefield
-var Livefield = { VERSION: '0.9.1' };
+var Livefield = { VERSION: '0.10.0' };
 
 // class Livefield.Controller
 Livefield.Controller = function(options) {
@@ -210,8 +210,8 @@ Livefield.Controller = function(options) {
   function appendResults() {
     if (!$results) {
       $results = $('<ul class="livefield-results" />').
-        delegate('.livefield-result', 'mouseover', onMouseOver).
         delegate('.livefield-result', 'mouseout', onMouseOut).
+        delegate('.livefield-result', 'mouseover', onMouseOver).
         delegate('.livefield-result', 'mousedown', onMouseDown).
         appendTo('body');
       positionResults();
@@ -221,18 +221,23 @@ Livefield.Controller = function(options) {
 
   function positionResults() {
     var padding       = $results.outerWidth() - $results.innerWidth(),
-        bodyHeight    = $('body').height(),
+        resultsHeight = $results.outerHeight();
+
+    $results.hide();
+
+    var bodyHeight    = $('body').height(),
         inputTop      = $input.offset().top,
         inputHeight   = $input.outerHeight(),
         inputBottom   = inputTop + inputHeight,
-        resultsHeight = $results.outerHeight(),
-        hasSpaceBelow = bodyHeight - inputTop > resultsHeight,
-        hasSpaceAbove = inputTop > resultsHeight;
+        hasSpaceBelow = (bodyHeight - inputTop > resultsHeight),
+        hasSpaceAbove = (inputTop > resultsHeight);
 
     if (hasSpaceBelow || !hasSpaceAbove) {
       var top = inputBottom;
+      $results.removeClass('livefield-drop-up');
     } else {
       var top = inputTop - resultsHeight;
+      $results.addClass('livefield-drop-up');
     }
 
     $results.css({
@@ -241,7 +246,7 @@ Livefield.Controller = function(options) {
       width    : ($input.outerWidth() - padding) + 'px',
       left     : $input.offset().left + 'px',
       top      : top + 'px'
-    });
+    }).show();
   }
 
   function removeResults() {
@@ -253,6 +258,8 @@ Livefield.Controller = function(options) {
   }
 
   function highlightResult(which) {
+    var dropUpMode = $results && $results.hasClass('livefield-drop-up');
+
     switch (which) {
     case 'none':
       $results.find('.livefield-highlighted').
@@ -264,24 +271,33 @@ Livefield.Controller = function(options) {
 
       if ($current.length > 0) {
         $next = $current.next();
-      } else {
+      } else if (!dropUpMode) {
         $next = $results.find('.livefield-result:first-child');
       }
 
-      if ($next.length > 0) {
+      if ($next && $next.length > 0) {
         $current.removeClass('livefield-highlighted');
         $next.addClass('livefield-highlighted');
+      } else if (dropUpMode) {
+        $current.removeClass('livefield-highlighted');
       }
       break;
     case 'prev':
       var $current = $results.find('.livefield-highlighted');
+      var $prev;
 
       if ($current.length > 0) {
-        var $prev = $current.prev();
-        $current.removeClass('livefield-highlighted');
-        $prev.addClass('livefield-highlighted');
+        $prev = $current.prev();
+      } else if (dropUpMode) {
+        $prev = $results.find('.livefield-result:last-child');
       }
 
+      if ($prev && $prev.length > 0) {
+        $current.removeClass('livefield-highlighted');
+        $prev.addClass('livefield-highlighted');
+      } else if (!dropUpMode) {
+        $current.removeClass('livefield-highlighted');
+      }
       break;
     default:
       var $current = $results.find('.livefield-highlighted');
