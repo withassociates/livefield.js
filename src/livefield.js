@@ -173,6 +173,7 @@ Livefield.Controller = function(options) {
         $result.addClass('livefield-result');
         $result.appendTo($results);
       }
+      positionResults();
     }
   }
 
@@ -219,15 +220,27 @@ Livefield.Controller = function(options) {
   }
 
   function positionResults() {
-    var padding = $results.outerWidth() - $results.innerWidth();
-    var offsetLeft = 0;
+    var padding       = $results.outerWidth() - $results.innerWidth(),
+        bodyHeight    = $('body').height(),
+        inputTop      = $input.offset().top,
+        inputHeight   = $input.outerHeight(),
+        inputBottom   = inputTop + inputHeight,
+        resultsHeight = $results.outerHeight(),
+        hasSpaceBelow = bodyHeight - inputTop > resultsHeight,
+        hasSpaceAbove = inputTop > resultsHeight;
+
+    if (hasSpaceBelow || !hasSpaceAbove) {
+      var top = inputBottom;
+    } else {
+      var top = inputTop - resultsHeight;
+    }
 
     $results.css({
       position : 'absolute',
       zIndex   : '1000',
       width    : ($input.outerWidth() - padding) + 'px',
-      left     : ($input.offset().left + offsetLeft) + 'px',
-      top      : $input.offset().top + $input.outerHeight() + 'px'
+      left     : $input.offset().left + 'px',
+      top      : top + 'px'
     });
   }
 

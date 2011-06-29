@@ -95,13 +95,13 @@ describe('Livefield', function() {
 
     it('highlights the second result', function() {
       runs(function() {
-
+        expect('.livefield-result:nth-child(2)').toBeHighlighted();
       });
     });
 
     it('sets the input value', function() {
       runs(function() {
-
+        expect(this.$input.val()).toEqual('/about-our-suppliers');
       });
     });
   });
@@ -208,8 +208,9 @@ describe('Livefield', function() {
     });
   });
 
-  describe('given there are result, but I have not selected any, when I press enter', function() {
+  describe('given there are results, but I have not selected any, when I press enter', function() {
     beforeEach(function() {
+      window.onerror = window.onerror || function() {};
       spyOn(window, 'onerror');
       typesCharacter();
       pressesKey('enter');
