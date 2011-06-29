@@ -221,7 +221,7 @@ Livefield.Controller = function(options) {
 
   function positionResults() {
     var padding       = $results.outerWidth() - $results.innerWidth(),
-        resultsHeight = $results.outerHeight(true);
+        resultsHeight = $results.outerHeight();
 
     $results.hide();
 
@@ -258,6 +258,8 @@ Livefield.Controller = function(options) {
   }
 
   function highlightResult(which) {
+    var dropUpMode = $results && $results.hasClass('livefield-drop-up');
+
     switch (which) {
     case 'none':
       $results.find('.livefield-highlighted').
@@ -269,24 +271,33 @@ Livefield.Controller = function(options) {
 
       if ($current.length > 0) {
         $next = $current.next();
-      } else {
+      } else if (!dropUpMode) {
         $next = $results.find('.livefield-result:first-child');
       }
 
-      if ($next.length > 0) {
+      if ($next && $next.length > 0) {
         $current.removeClass('livefield-highlighted');
         $next.addClass('livefield-highlighted');
+      } else if (dropUpMode) {
+        $current.removeClass('livefield-highlighted');
       }
       break;
     case 'prev':
       var $current = $results.find('.livefield-highlighted');
+      var $prev;
 
       if ($current.length > 0) {
-        var $prev = $current.prev();
-        $current.removeClass('livefield-highlighted');
-        $prev.addClass('livefield-highlighted');
+        $prev = $current.prev();
+      } else if (dropUpMode) {
+        $prev = $results.find('.livefield-result:last-child');
       }
 
+      if ($prev && $prev.length > 0) {
+        $current.removeClass('livefield-highlighted');
+        $prev.addClass('livefield-highlighted');
+      } else if (!dropUpMode) {
+        $current.removeClass('livefield-highlighted');
+      }
       break;
     default:
       var $current = $results.find('.livefield-highlighted');

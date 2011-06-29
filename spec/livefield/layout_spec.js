@@ -95,6 +95,26 @@ describe('Livefield results list', function() {
         expect('.livefield-results').toHaveClass('livefield-drop-up');
       });
     });
+
+    describe('pressing up', function() {
+      beforeEach(function() {
+        pressesKey('up');
+      });
+
+      it('highlights the bottom result', function() {
+        expect('.livefield-result:last-child').toBeHighlighted();
+      });
+    });
+
+    describe('pressing down', function() {
+      beforeEach(function() {
+        pressesKey('down');
+      });
+
+      it('does nothing', function() {
+        expect('.livefield-result').not.toBeHighlighted();
+      });
+    });
   });
 
 });

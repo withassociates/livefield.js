@@ -3,6 +3,20 @@
   font: 13px/1 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+html, body {
+  display: block;
+  position: relative;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  zoom: 1;
+}
+
+p {
+  margin: 0;
+  padding: 10px;
+}
+
 ul, ol, li {
   display: block;
   position: relative;
@@ -13,7 +27,7 @@ ul, ol, li {
 
 .livefield-input {
   display: block;
-  width: 100%;
+  width: 750px;
   margin: 0;
   padding: 8px 10px;
   border: 1px solid #d4d4d4;
@@ -23,10 +37,12 @@ ul, ol, li {
 }
 
 .livefield-results {
+  display: block;
   padding: 4px 0;
   border: 1px solid #d4d4d4;
   border-top: 0 none;
   line-height: 1;
+  background: #fff;
 }
 
 .livefield-drop-up {
