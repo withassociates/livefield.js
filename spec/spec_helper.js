@@ -54,21 +54,21 @@ function pressesKey(code) {
 
     $('#my-input').trigger(e);
   });
-  waits();
+  waits(100);
 }
 
 function blursInput() {
   runs(function() {
     this.$input.blur();
   });
-  waits();
+  waits(100);
 }
 
 function focusesInput() {
   runs(function() {
     this.$input.focus();
   });
-  waits();
+  waits(100);
 }
 
 LivefieldMatchers = {
@@ -82,7 +82,7 @@ LivefieldMatchers = {
   },
 
   toHaveFocus: function() {
-    return $(this.actual)[0] == $('*:focus')[0];
+    return $(this.actual)[0] === $('*:focus')[0];
   },
 
   toMatchElements: function(count) {
