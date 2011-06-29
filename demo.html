@@ -12,13 +12,23 @@
   </head>
   <body>
 
-    <p>Run the <a href="spec.html">spec</a>.</p>
+    <p style="text-align: right">Run the <a href="spec.html">spec</a>.</p>
 
     <input
-     id="my-input"
+     id="top-input"
      type="text"
      data-store="spec/fixtures/my_store.json"
      data-template="#livefield-result-template"
+     style="position: absolute; top: 10px; left: 10px; width: 600px"
+     autofocus
+    />
+
+    <input
+     id="bottom-input"
+     type="text"
+     data-store="spec/fixtures/my_store.json"
+     data-template="#livefield-result-template"
+     style="position: absolute; left: 10px; bottom: 10px; width: 600px;"
      autofocus
     />
 
@@ -30,7 +40,8 @@
     </script>
 
     <script>
-      $('#my-input').livefield();
+      $('#top-input').livefield();
+      $('#bottom-input').livefield();
     </script>
 
   </body>

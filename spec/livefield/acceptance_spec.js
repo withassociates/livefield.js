@@ -4,6 +4,11 @@ describe('Livefield', function() {
     createContainer();
     this.addMatchers(LivefieldMatchers);
     this.$input = createInput();
+    this.$input.css({
+      position: 'absolute',
+      width: '750px',
+      top: 0
+    });
     this.controller = new Livefield.Controller({ input: '#my-input' });
   });
 
