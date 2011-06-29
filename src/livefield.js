@@ -93,7 +93,7 @@
 (function($, window) {
 
 // module Livefield
-var Livefield = { VERSION: '0.9.0' };
+var Livefield = { VERSION: '0.9.1' };
 
 // class Livefield.Controller
 Livefield.Controller = function(options) {
