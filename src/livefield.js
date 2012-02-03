@@ -93,7 +93,7 @@
 (function($, window) {
 
 // module Livefield
-var Livefield = { VERSION: '0.10.0' };
+var Livefield = { VERSION: '0.11.0' };
 
 // class Livefield.Controller
 Livefield.Controller = function(options) {
@@ -195,6 +195,7 @@ Livefield.Controller = function(options) {
   function commit() {
     $input.blur();
     removeResults();
+    $input.trigger('change');
   }
 
   // -- HELPERS --
